@@ -27,6 +27,7 @@ If any of these change, just delete the json file to fix the program in case it 
 
 ## Questions & Answers
 Q: Why does the main GUI file end with the PYW extension?
+
 A: The main use case for this extension is hiding an optional command prompt when starting the script. You can read more about it [here](https://stackoverflow.com/questions/34739315/pyw-files-in-python-program).
 
 ## Contributing
