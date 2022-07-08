@@ -16,9 +16,9 @@ Due to the project using a very low number of libraries otherwise, I have added 
 1. After creating your custom dataset, MAKE SURE that the dataset YAML file uses the global path (starting from the disk drive) instead of using a relative path
 2. Start the script and pick your options (any errors will be shown when trying to create the job)
 
-   To start the script without the command prompt use: ```pythonw gui.py```
+   To start the script without the command prompt use: ```pythonw gui.pyw```
    
-   If you don't mind the command prompt, you can just start it normally by using ```python gui.py```
+   If you don't mind the command prompt, you can just start it normally by using ```python gui.pyw```
 
 3. Create the job and enjoy
 
