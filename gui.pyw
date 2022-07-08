@@ -1,7 +1,7 @@
 import functions
 from shutil import copy as copyFile
 import os
-from time import sleep
+import time
 sg = functions.importLibraries()[0]
 
 sg.theme('DarkBlack')
@@ -55,7 +55,7 @@ while True:
         errors = functions.checkErrors(end_dict)
         window['job_errors'].update("Looking for PyTorch installation...\nWARNING: If the application stops responding, please keep waiting", visible=True, text_color='white')
         window.refresh()
-        sleep(1)
+        time.sleep(0.25)
 
         if torch_location is None:
             torch_location = functions.find_torch_directory()
@@ -100,4 +100,7 @@ if start_job:
     
     copyFile(end_dict['yaml'], os.path.join(yolo_path, f"{yaml_name[:-5]}_temp.yaml"))
     command = f'cd {yolo_path} && git pull && python {train_file} --img {end_dict[9]} --batch {-1 if end_dict[0] == True else int(end_dict["batch_size"])} --epochs {int(end_dict["epochs"])} --cache {"disk" if end_dict[3] == True else "ram"} --data {yaml_name[:-5]}_temp.yaml --weights {model} --patience {int(end_dict[10])} --workers {int(end_dict[8])}'
+    start = time.time()
     os.system(command)
+    sg.popup("Model training finished!\nTime Elapsed: {}".format(round(time.time() - start)), title="Training Ended")
+    del start
