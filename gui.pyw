@@ -77,7 +77,6 @@ while True:
             break
 
 window.close()
-functions.flushTemporaryFiles(yolo_path)
 
 if start_job:
     yolo_path = end_dict['yolo_path'].split('/')
@@ -86,6 +85,7 @@ if start_job:
     yaml_name = end_dict['yaml'].split('/')[-1]
     sg.user_settings_set_entry('train_file', train_file)
     sg.user_settings_set_entry('yolo_path', yolo_path)
+    functions.flushTemporaryFiles(yolo_path)
 
     batch_size = 0
     model_dict = {
@@ -99,8 +99,9 @@ if start_job:
         if end_dict[i] == True: model = 'yolov5{}.pt'.format(model_dict[i])
     
     copyFile(end_dict['yaml'], os.path.join(yolo_path, f"{yaml_name[:-5]}_temp.yaml"))
-    command = f'cd {yolo_path} && git pull && python {train_file} --img {end_dict[9]} --batch {-1 if end_dict[0] == True else int(end_dict["batch_size"])} --epochs {int(end_dict["epochs"])} --cache {"disk" if end_dict[3] == True else "ram"} --data {yaml_name[:-5]}_temp.yaml --weights {model} --patience {int(end_dict[10])} --workers {int(end_dict[8])}'
+    command = f'cd {yolo_path} && echo Checking for new commits... && git pull && echo Starting training... && python {train_file} --img {end_dict[9]} --batch {-1 if end_dict[0] == True else int(end_dict["batch_size"])} --epochs {int(end_dict["epochs"])} --cache {"disk" if end_dict[3] == True else "ram"} --data {yaml_name[:-5]}_temp.yaml --weights {model} --patience {int(end_dict[10])} --workers {int(end_dict[8])}'
     start = time.time()
     os.system(command)
-    sg.popup("Model training finished!\nTime Elapsed: {}".format(round(time.time() - start)), title="Training Ended")
+    total_time = round(time.time() - start)
     del start
+    sg.popup(f"Model training finished!\nTime Elapsed: {int(total_time / 3600)} hours, {int((total_time - int(total_time / 3600) * 3600) / 60)} minutes and {total_time%60} seconds", title="Training Ended")
