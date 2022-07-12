@@ -6,7 +6,7 @@ This project consists of a GUI made using PySimpleGUI with the aim of creating y
 The project consists of 3 files:
 - free_memory.py: This file's purpose is freeing up memory occupied by NVidia fatbins (credits for this script goes to [cobryan05](https://github.com/cobryan05))
 - gui.pyw: This file contains the main code of the GUI. The extension of this file hides some command lines without purpose (see the FAQ below)
-- functions.py: This fule contains most of the functions, which are used by the rest of the files
+- functions.py: This file contains most of the functions, which are used by the rest of the files
 
 ## Installation
 In order to use this program, you will need [PyTorch](https://pytorch.org/get-started/locally/) and [a clone of the YOLOv5 repository](https://github.com/ultralytics/yolov5) installed on your computer.
