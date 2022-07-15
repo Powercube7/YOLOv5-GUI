@@ -1,4 +1,5 @@
 import os
+
 def importLibraries():
     try:
         import os
@@ -16,6 +17,18 @@ def find_torch_directory():
             output = os.path.join(root, "*.dll")
             output = output.replace("\\", "/")
     return output
+
+def createYaml(yolo_path, yaml_path, yaml_name):
+    file = open(os.path.join(yaml_path, yaml_name), "r")
+    content = file.read()
+    content = content.split("\n")
+    dataset_path = removeExtraSpaces(content.pop(0)[5:])
+    os.chdir(yaml_path)
+    dataset_path = os.path.abspath(dataset_path).replace("\\", "/")
+    file.close()
+
+    file = open(os.path.join(yolo_path, f"{yaml_name[:-5]}_temp.yaml"), "w+")
+    file.write(f"path: {dataset_path}\n" + "\n".join(content))
 
 def flushTemporaryFiles(yolo_path):
     for file in os.listdir(yolo_path):
@@ -86,3 +99,5 @@ def checkErrors(dictionary):
             errors.append(f"{legend_dict[i]} value is not in the valid range. Minimum value: {ranges[i][0]}, maximum value: {ranges[i][1] - 1}")
 
     return errors
+
+createYaml("C:\\Users\\Cool Cat\\Desktop\\Python Automatizare\\Machine learning\\yolov5", "C:\\Users\\Cool Cat\\Desktop\\Python Automatizare\\Machine learning\\yolov5", "dino_temp.yaml")

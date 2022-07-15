@@ -57,32 +57,36 @@ while True:
         window.refresh()
         time.sleep(0.25)
 
-        if torch_location is None:
-            torch_location = functions.find_torch_directory()
-            sg.user_settings_set_entry('torch_location', torch_location)
-
         if len(errors) > 0:
             window['job_errors'].update(f"The following {len(errors)} error(s) were encountered:\n- " + "\n- ".join(errors), visible=True, text_color='red')
-        
-        elif torch_location is None:
-            window['job_errors'].update("Error: PyTorch installation was not found.", visible=True, text_color='red')
 
-        else:
-            window['job_errors'].update("Cleaning memory to avoid leaks...", visible=True, text_color='white')
-            window.refresh()
-            os.system(f'cd {os.getcwd()} && python free_memory.py --input "{torch_location}"')
-            window['job_errors'].update("Starting Job...")
-            window.refresh()
-            start_job = True
-            break
+        elif torch_location is None:
+            torch_location = functions.find_torch_directory()
+            sg.user_settings_set_entry('torch_location', torch_location)
+        
+            if torch_location is None:
+                window['job_errors'].update("Error: PyTorch installation was not found.", visible=True, text_color='red')
+
+            else:
+                window['job_errors'].update("Cleaning memory to avoid leaks...", visible=True, text_color='white')
+                window.refresh()
+                os.system(f'cd {os.getcwd()} && python free_memory.py --input "{torch_location}"')
+                window['job_errors'].update("Starting Job...")
+                window.refresh()
+                start_job = True
+                break
 
 window.close()
 
 if start_job:
-    yolo_path = end_dict['yolo_path'].split('/')
+    yolo_path = end_dict['yolo_path'].replace('\\', '/')
+    yolo_path = yolo_path.split('/')
     train_file = yolo_path.pop()
     yolo_path = "/".join(yolo_path)
-    yaml_name = end_dict['yaml'].split('/')[-1]
+    yaml_path = end_dict['yaml'].replace('\\', '/')
+    yaml_path = yaml_path.split('/')
+    yaml_name = yaml_path.pop()
+    yaml_path = "/".join(yaml_path)
     sg.user_settings_set_entry('train_file', train_file)
     sg.user_settings_set_entry('yolo_path', yolo_path)
     functions.flushTemporaryFiles(yolo_path)
@@ -98,10 +102,9 @@ if start_job:
     for i in range(4, 8):
         if end_dict[i] == True: model = 'yolov5{}.pt'.format(model_dict[i])
     
-    copyFile(end_dict['yaml'], os.path.join(yolo_path, f"{yaml_name[:-5]}_temp.yaml"))
+    functions.createYaml(yolo_path, yaml_path, yaml_name)
     command = f'cd {yolo_path} && echo Checking for new commits... && git pull && echo Starting training... && python {train_file} --img {end_dict[9]} --batch {-1 if end_dict[0] == True else int(end_dict["batch_size"])} --epochs {int(end_dict["epochs"])} --cache {"disk" if end_dict[3] == True else "ram"} --data {yaml_name[:-5]}_temp.yaml --weights {model} --patience {int(end_dict[10])} --workers {int(end_dict[8])}'
     start = time.time()
     os.system(command)
     total_time = round(time.time() - start)
-    del start
     sg.popup(f"Model training finished!\nTime Elapsed: {int(total_time / 3600)} hours, {int((total_time - int(total_time / 3600) * 3600) / 60)} minutes and {total_time%60} seconds", title="Training Ended")
