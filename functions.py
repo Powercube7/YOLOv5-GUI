@@ -99,5 +99,3 @@ def checkErrors(dictionary):
             errors.append(f"{legend_dict[i]} value is not in the valid range. Minimum value: {ranges[i][0]}, maximum value: {ranges[i][1] - 1}")
 
     return errors
-
-createYaml("C:\\Users\\Cool Cat\\Desktop\\Python Automatizare\\Machine learning\\yolov5", "C:\\Users\\Cool Cat\\Desktop\\Python Automatizare\\Machine learning\\yolov5", "dino_temp.yaml")
