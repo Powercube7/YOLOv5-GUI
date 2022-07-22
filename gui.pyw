@@ -11,6 +11,12 @@ yolo_path = sg.user_settings_get_entry('yolo_path', '')
 train_file = sg.user_settings_get_entry('train_file', '')
 torch_location = sg.user_settings_get_entry('torch_location', None)
 
+def get_file_from_path(path):
+    path = path.replace('\\', '/')
+    path = path.split('/')
+    file = path.pop()
+    path = '/'.join(path)
+    return file, path
 
 layout = [
         [sg.Push(), sg.Text("YOLO Model Trainer GUI", auto_size_text=True, font='arial 18 bold'), sg.Push()],
@@ -79,14 +85,8 @@ while True:
 window.close()
 
 if start_job:
-    yolo_path = end_dict['yolo_path'].replace('\\', '/')
-    yolo_path = yolo_path.split('/')
-    train_file = yolo_path.pop()
-    yolo_path = "/".join(yolo_path)
-    yaml_path = end_dict['yaml'].replace('\\', '/')
-    yaml_path = yaml_path.split('/')
-    yaml_name = yaml_path.pop()
-    yaml_path = "/".join(yaml_path)
+    train_file, yolo_path = get_file_from_path(end_dict['yolo_path'])
+    yaml_name, yaml_path = get_file_from_path(end_dict['yaml'])
     sg.user_settings_set_entry('train_file', train_file)
     sg.user_settings_set_entry('yolo_path', yolo_path)
     functions.flushTemporaryFiles(yolo_path)
