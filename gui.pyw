@@ -35,7 +35,7 @@ layout = [
         [sg.Push(), sg.Button('Create Job', auto_size_button=True), sg.Exit()]
     ]
 
-window = sg.Window('Model Training GUI', layout)
+window = sg.Window('Model Training GUI', layout, icon='icon.ico')
 start_job = False
 
 while True:
