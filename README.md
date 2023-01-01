@@ -15,7 +15,7 @@ This program requires [a clone of the YOLOv5 repository](https://github.com/ultr
 ## Installation
 In order to run this program, you will need to install its dependencies by running the following command:
       
-      ```pip install -r requirements.txt```
+      pip install -r requirements.txt
 
 ## Usage
 
